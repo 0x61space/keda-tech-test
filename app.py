@@ -1,16 +1,11 @@
+from fastapi import FastAPI
+from mangum import Mangum
 from typing import Any, Dict
 
-from aws_lambda_powertools.utilities.typing import LambdaContext
+app = FastAPI()
 
+@app.get("/")
+async def root() -> Dict[str, str]:
+    return {"message": "Hello from FastAPI on Lambda!"}
 
-def lambda_handler(
-    event: Dict, 
-    context: LambdaContext,
-) -> Dict[str, Any]:
-    return {
-        'statusCode': 200,
-        'headers': {
-            'Content-Type': 'application/json'
-        },
-        'body': '{"message": "Hello from Python 3.13!"}'
-    }
+lambda_handler = Mangum(app, lifespan="off")
